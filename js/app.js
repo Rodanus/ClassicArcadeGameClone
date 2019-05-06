@@ -49,7 +49,19 @@ class Player extends Enemy {
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
+// enemy array
+let allEnemies = [];
 
+// creating enemies
+const enemy1 = new Enemy(101, 60, 100),
+enemy2 = new Enemy(202, 140, 200),
+enemy3 = new Enemy(303, 220, 300);
+
+// player
+const player = new Player(202, 41.5 * 9);
+
+// push all enemies to allEnemies array
+allEnemies.push(enemy1, enemy2, enemy3);
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
