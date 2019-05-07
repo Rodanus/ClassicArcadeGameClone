@@ -50,8 +50,39 @@ class Player extends Enemy {
 
     }
 
+    // receives the pressed key and moves the player based on it.
     handleInput(key) {
+        // check which key is pressed
+        switch(key) {
 
+            case "left":
+              // to make sure that the player won't cross the screen.
+              if(this.x !== 0) {
+                this.x -= 100;
+              }
+              break;
+
+            case "up":
+              // to make sure that the player won't cross the screen.
+              if(this.y !== -41.5) {
+                this.y -= 83;
+              }
+              break;
+
+            case "right":
+              // to make sure that the player won't cross the screen.
+              if(this.x !== 400) {
+                this.x += 100;
+              }
+              break;
+
+            case "down":
+              // to make sure that the player won't cross the screen.
+              if(this.y !== 373.5) {
+                this.y += 83;
+              }
+
+        }
     }
 }
 
@@ -68,7 +99,7 @@ enemy2 = new Enemy(202, 140, 200),
 enemy3 = new Enemy(303, 220, 300);
 
 // player
-const player = new Player(202, 41.5 * 9);
+const player = new Player(200, 373.5);
 
 // push all enemies to allEnemies array
 allEnemies.push(enemy1, enemy2, enemy3);
