@@ -38,8 +38,7 @@ class Enemy {
            this.y + this.height > player.y) {
 
             setTimeout(() => {
-                player.y = 373.5;
-                player.x = 200;
+                player.resetPosition();
             }, 0);
 
         }
@@ -65,11 +64,10 @@ class Player extends Enemy {
     }
 
     update() {
-        // if player reaches the water, rest player's position after the specified time.
+        // if player reaches the water, reset player's position after the specified time.
         if(this.y === -41.5) {
             setTimeout(() => {
-                this.y = 373.5;
-                this.x = 200;
+                this.resetPosition();
             }, 80);
         }
     }
@@ -107,6 +105,12 @@ class Player extends Enemy {
               }
 
         }
+    }
+
+    // for reseting player's position
+    resetPosition() {
+        this.x = 200;
+        this.y = 373.5;
     }
 }
 
