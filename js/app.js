@@ -17,6 +17,16 @@ class Enemy {
         // You should multiply any movement by the dt parameter
         // which will ensure the game runs at the same speed for
         // all computers.
+
+        // if crossed the screen
+        if (this.x > 505) {
+            // reset its position after 1 second.
+            setTimeout(() => this.x = -120, 1000);
+
+        } else { // let it move
+            this.x += this.speed * dt;
+        }
+
     }
 
     // Draw the enemy on the screen, required method for game
