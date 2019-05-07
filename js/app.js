@@ -47,7 +47,13 @@ class Player extends Enemy {
     }
 
     update() {
-
+        // if player reaches the water, rest player's position after the specified time.
+        if(this.y === -41.5) {
+            setTimeout(() => {
+                this.y = 373.5;
+                this.x = 200;
+            }, 80);
+        }
     }
 
     // receives the pressed key and moves the player based on it.
