@@ -6,6 +6,9 @@ class Enemy {
         this.x = x;
         this.y = y;
         this.speed = speed;
+        this.width = 50;
+        this.height = 50;
+
         // The image/sprite for our enemies, this uses
         // a helper we've provided to easily load images
         this.sprite = 'images/enemy-bug.png';
@@ -27,6 +30,20 @@ class Enemy {
             this.x += this.speed * dt;
         }
 
+        // check for collision
+        // https://stackoverflow.com/questions/13916966/adding-collision-detection-to-images-drawn-on-canvas
+        if(this.x < player.x + player.width &&
+           this.x + this.width > player.x &&
+           this.y < player.y + player.height &&
+           this.y + this.height > player.y) {
+
+            setTimeout(() => {
+                player.y = 373.5;
+                player.x = 200;
+            }, 0);
+
+        }
+
     }
 
     // Draw the enemy on the screen, required method for game
@@ -36,13 +53,14 @@ class Enemy {
 }
 
 
-
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
 class Player extends Enemy {
     constructor(x, y) {
         super(x, y);
+        this.width = 50;
+        this.height = 50;
         this.sprite = 'images/char-boy.png';
     }
 
@@ -100,7 +118,7 @@ class Player extends Enemy {
 let allEnemies = [];
 
 // creating enemies
-const enemy1 = new Enemy(101, 60, 100),
+const enemy1 = new Enemy(101, 60, 150),
 enemy2 = new Enemy(202, 140, 200),
 enemy3 = new Enemy(303, 220, 300);
 
