@@ -37,9 +37,8 @@ class Enemy {
            this.y < player.y + player.height &&
            this.y + this.height > player.y) {
 
-            setTimeout(() => {
-                player.resetPosition();
-            }, 0);
+          player.resetPosition();
+          decreaseScore(300);
 
         }
 
@@ -113,12 +112,20 @@ class Player extends Enemy {
     }
 }
 
-
+// used to increase the score.
 function increaseScore(points) {
-  score += points;
-  // TODO: update the displayed score
+    score += points;
+    // TODO: update the displayed score
 }
 
+// used to decrease the score.
+function decreaseScore(points) {
+    if(score > 0) {
+      score -= points;
+    }
+
+    // TODO: update the displayed score
+}
 
 /*
    will change yPosition's value each time a new enemy is created.
