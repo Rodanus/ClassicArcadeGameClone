@@ -1,9 +1,9 @@
 // Enemies our player must avoid
 class Enemy {
-    constructor(x, y, speed) {
+    constructor(y, speed) {
         // Variables applied to each of our instances go here,
         // we've provided one for you to get started
-        this.x = x;
+        this.x = -120;
         this.y = y;
         this.speed = speed;
         this.width = 50;
@@ -56,10 +56,10 @@ class Enemy {
 // This class requires an update(), render() and
 // a handleInput() method.
 class Player extends Enemy {
-    constructor(x, y) {
-        super(x, y);
-        this.width = 50;
-        this.height = 50;
+    constructor(width, height) {
+        super(width, height);
+        this.x = 200;
+        this.y = 373.5;
         this.sprite = 'images/char-boy.png';
     }
 
@@ -114,23 +114,67 @@ class Player extends Enemy {
     }
 }
 
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
 
-// enemy array
+// enemies array
 let allEnemies = [];
 
-// creating enemies
-const enemy1 = new Enemy(101, 60, 150),
-enemy2 = new Enemy(202, 140, 200),
-enemy3 = new Enemy(303, 220, 300);
+// will be used to set the y coordinate of the newly created enemy.
+let yPosition = 0;
+
+/*
+   will change yPosition's value each time a new enemy is created.
+   To make sure that the newly instantiated enemy will be on the next block instead
+   of instantiating it on the same block.
+*/
+function yCoordinate() {
+    switch(yPosition) {
+
+        case 60:
+          yPosition = 144;
+          break;
+
+        case 144:
+          yPosition = 227;
+          break;
+
+        case 277:
+          yPosition = 60;
+          break;
+
+        default:
+          yPosition = 60;
+    }
+
+    return yPosition;
+}
+
+/*
+   will be used in createEnemies function, it will set a random number between
+   150 and 300 which will be the speed of the newly created enemy.
+
+   https://appdividend.com/2019/02/20/javascript-math-random-tutorial-math-random-example/
+*/
+function speedGenerator() {
+   let min = Math.ceil(150);
+   let max = Math.floor(300);
+   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+/*
+   for creating new enemies and pushing them to allEnemies array.
+*/
+function createEnemies(num) {
+    for(let i = 0; i < num; i++) {
+        allEnemies.push(new Enemy(yCoordinate(), speedGenerator()));
+   }
+}
+
+// instantiate 4 enemies
+createEnemies(4);
 
 // player
-const player = new Player(200, 373.5);
+const player = new Player();
 
-// push all enemies to allEnemies array
-allEnemies.push(enemy1, enemy2, enemy3);
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
