@@ -64,11 +64,10 @@ class Player extends Enemy {
     }
 
     update() {
-        // if player reaches the water, reset player's position after the specified time.
+        // if player reaches the water, reset player's position and increase the score.
         if(this.y === -41.5) {
-            setTimeout(() => {
-                this.resetPosition();
-            }, 80);
+          this.resetPosition();
+          increaseScore(500);
         }
     }
 
@@ -115,11 +114,11 @@ class Player extends Enemy {
 }
 
 
-// enemies array
-let allEnemies = [];
+function increaseScore(points) {
+  score += points;
+  // TODO: update the displayed score
+}
 
-// will be used to set the y coordinate of the newly created enemy.
-let yPosition = 0;
 
 /*
    will change yPosition's value each time a new enemy is created.
@@ -169,12 +168,20 @@ function createEnemies(num) {
    }
 }
 
-// instantiate 4 enemies
-createEnemies(4);
+// represents player's score.
+let score = 0;
+
+// enemies array
+let allEnemies = [];
+
+// will be used to set the y coordinate of the newly created enemy.
+let yPosition = 0;
 
 // player
 const player = new Player();
 
+// instantiate 4 enemies
+createEnemies(4);
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
