@@ -152,8 +152,14 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
-
         player.render();
+        renderScore();
+
+        // Render each heart added into lives array
+        for (const heart of hearts) {
+            heart.render();
+        }
+
     }
 
     /* This function does nothing but it could have been a good place to
@@ -173,7 +179,8 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/Heart.png'
     ]);
     Resources.onReady(init);
 

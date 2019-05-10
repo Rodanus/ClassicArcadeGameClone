@@ -38,6 +38,7 @@ class Enemy {
            this.y + this.height > player.y) {
 
           player.resetPosition();
+          player.lostLife();
           decreaseScore(300);
 
         }
@@ -59,15 +60,39 @@ class Player extends Enemy {
         super(width, height);
         this.x = 200;
         this.y = 373.5;
+        this.remainingLives = 3;
         this.sprite = 'images/char-boy.png';
+
     }
 
     update() {
-        // if player reaches the water, reset player's position and increase the score.
+        // if player reaches the water, reset player's position and increase the score and the level.
         if(this.y === -41.5) {
           this.resetPosition();
           increaseScore(500);
+          level += 1;
         }
+      }
+
+    // this method is invoked when collision happens, it removes one heart.
+    lostLife() {
+      if(this.remainingLives > 0) {
+        hearts.pop();
+        this.remainingLives--;
+        xPositionForHearts -= 30;
+      } else {
+        alert('Game over')
+      }
+    }
+
+    // to add one life to player.
+    addLife() {
+      if(this.remainingLives < 3) {
+        const heart = new Heart(xPositionForHearts);
+        hearts.push(heart);
+        this.remainingLives++;
+        xPositionForHearts += 30;
+      }
     }
 
     // receives the pressed key and moves the player based on it.
@@ -112,19 +137,42 @@ class Player extends Enemy {
     }
 }
 
+class Heart {
+  // Create Heart constructor with position coordinates parameters
+  constructor(x, y) {
+      this.sprite = 'images/Heart.png';
+      this.x = x;
+      this.y = 0;
+      //Resize image
+      this.width = 25;
+      this.height = 42;
+  }
+  // Draw the live object (hearts) on our canvas:
+  render() {
+      ctx.drawImage(Resources.get(this.sprite), this.x, this.y, this.width, this.height);
+  }
+}
+
+
 // used to increase the score.
 function increaseScore(points) {
-    score += points;
-    // TODO: update the displayed score
+  score += points;
 }
 
 // used to decrease the score.
 function decreaseScore(points) {
-    if(score > 0) {
-      score -= points;
-    }
+  if(score > 0) {
+    score -= points;
+  }
+}
 
-    // TODO: update the displayed score
+
+// will be used to draw/update the score.
+function renderScore() {
+  ctx.font = '24px arial';
+  ctx.color = "#333";
+  ctx.fillText(`Score: ${score}`, 205, 31);
+  ctx.fillText(`level ${level}`, 15, 31);
 }
 
 /*
@@ -167,7 +215,7 @@ function speedGenerator() {
 }
 
 /*
-   for creating new enemies and pushing them to allEnemies array.
+   for creating new enemies and pushing them into allEnemies array.
 */
 function createEnemies(num) {
     for(let i = 0; i < num; i++) {
@@ -177,6 +225,9 @@ function createEnemies(num) {
 
 // represents player's score.
 let score = 0;
+
+// represents player's level.
+let level = 0;
 
 // enemies array
 let allEnemies = [];
@@ -189,6 +240,19 @@ const player = new Player();
 
 // instantiate 4 enemies
 createEnemies(4);
+
+// Create hearts array to put new hearts into it.
+let hearts = [];
+
+// used to determine the next heart's x position.
+let xPositionForHearts = 410;
+
+// create 3 hearts depending on initial player remainingLives
+for (let i = 1; i <= player.remainingLives; i++) {
+  let heart = new Heart(xPositionForHearts);// create new heart object
+  hearts.push(heart);// Add it to hearts array
+  xPositionForHearts += 30;
+}
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
