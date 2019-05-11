@@ -98,6 +98,11 @@ var Engine = (function(global) {
         gems.forEach(function(gem) {
             gem.update();
         });
+
+        // invoke dHeart's update() method if its value isn't undefined.
+        if(dHeart !== undefined) {
+            dHeart.update();
+        }
     }
 
     /* This function initially draws the "game level", it will then call
@@ -169,6 +174,10 @@ var Engine = (function(global) {
             gem.render();
         }
 
+        // Render dHeart if its value isn't undefined.
+        if(dHeart !== undefined) {
+            dHeart.render();
+        }
     }
 
     /* This function does nothing but it could have been a good place to

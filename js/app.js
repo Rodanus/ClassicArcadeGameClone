@@ -72,6 +72,7 @@ class Player extends Enemy {
           increaseScore(500);
           level += 1;
           renderNewGems();
+          displayHeart();
 
           // if player passes 4 levels, create one more enemy.
           if(level % 4 === 0 && level !== 20) {
@@ -95,7 +96,7 @@ class Player extends Enemy {
     // to add one life to player.
     addLife() {
       if(this.remainingLives < 3) {
-        const heart = new Heart(xPositionForHearts);
+        const heart = new Heart(xPositionForHearts, 0, 25, 42);
         hearts.push(heart);
         this.remainingLives++;
         xPositionForHearts += 30;
@@ -146,14 +147,28 @@ class Player extends Enemy {
 
 class Heart {
   // Create Heart constructor with position coordinates parameters
-  constructor(x, y) {
+  constructor(x, y, width, height) {
       this.sprite = 'images/Heart.png';
       this.x = x;
-      this.y = 0;
+      this.y = y;
       //Resize image
-      this.width = 25;
-      this.height = 42;
+      this.width = width;
+      this.height = height;
   }
+
+  update() {
+    // check for collision
+    if(this.x < player.x + player.width &&
+       this.x + 60 > player.x &&
+       this.y < player.y + player.height &&
+       this.y + 30 > player.y) {
+
+      player.addLife(); // add one life
+      dHeart = undefined; // to make the heart disappear
+
+    }
+  }
+
   // Draw the live object (hearts) on our canvas:
   render() {
       ctx.drawImage(Resources.get(this.sprite), this.x, this.y, this.width, this.height);
@@ -304,6 +319,22 @@ function renderNewGems() {
   }
 }
 
+// this function displays a heart each time the player passes 5 levels.
+function displayHeart() {
+  // if 5 level passed, and it isn't the last level.
+  if(level % 5 === 0 && level !== 20) {
+
+    // to store into it a random position form allowedPositionsForDHeart array.
+    // https://www.kirupa.com/html5/picking_random_item_from_array.htm
+    const positionForDHeart = allowedPositionsForDHeart[Math.floor(Math.random() * allowedPositionsForGems.length)];
+
+    // change dHeart's value so that the heart will be rendered.
+    dHeart = new Heart(positionForDHeart[0], positionForDHeart[1], 75, 120);
+
+    // make heart disappear after the specified time by setting the dHeart's value to undefined.
+    setTimeout(() => dHeart = undefined, 4000);
+  }
+}
 
 // will be used to reset everything
 function resetGame() {
@@ -355,7 +386,7 @@ let xPositionForHearts = 410;
 
 // create 3 hearts depending on initial player remainingLives
 for (let i = 1; i <= player.remainingLives; i++) {
-  let heart = new Heart(xPositionForHearts);// create new heart object
+  let heart = new Heart(xPositionForHearts, 0, 25, 42);// create new heart object
   hearts.push(heart);// Add it to hearts array
   xPositionForHearts += 30;
 }
@@ -366,6 +397,17 @@ const allowedPositionsForGems = [];
 for(let y = 94; y <= 260; y += 83) {
   for(let x = 12; x <= 416; x += 101) {
     allowedPositionsForGems.push([x, y]);
+  }
+}
+
+// to store a heart that appears each time player passes 5 levels.
+let dHeart;
+// allowed positions to display hearts.
+const allowedPositionsForDHeart = [];
+// to fill our allowedPositionsForDHearts with allowed positions for rendering hearts.
+for(let y = 107; y <= 273; y += 83) {
+  for(let x = 11; x <= 415; x += 101) {
+    allowedPositionsForDHeart.push([x, y]);
   }
 }
 
