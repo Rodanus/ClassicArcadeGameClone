@@ -1,169 +1,168 @@
 // Enemies our player must avoid
 class Enemy {
-    constructor(y, speed) {
-        // Variables applied to each of our instances go here,
-        // we've provided one for you to get started
-        this.x = -120;
-        this.y = y;
-        this.speed = speed;
-        this.width = 50;
-        this.height = 50;
+  constructor(y, speed) {
+    // Variables applied to each of our instances go here,
+    // we've provided one for you to get started
+    this.x = -120;
+    this.y = y;
+    this.speed = speed;
+    this.width = 50;
+    this.height = 50;
 
-        // The image/sprite for our enemies, this uses
-        // a helper we've provided to easily load images
-        this.sprite = 'images/enemy-bug.png';
+    // The image/sprite for our enemies, this uses
+    // a helper we've provided to easily load images
+    this.sprite = 'images/enemy-bug.png';
+  }
+
+  // Update the enemy's position, required method for game
+  // Parameter: dt, a time delta between ticks
+  update(dt) {
+    // You should multiply any movement by the dt parameter
+    // which will ensure the game runs at the same speed for
+    // all computers.
+
+    // if crossed the screen
+    if (this.x > 505) {
+      // reset its position after 0 seconds.
+      setTimeout(() => this.x = -120, 0);
+
+    } else { // let it move
+      this.x += this.speed * dt;
     }
 
-    // Update the enemy's position, required method for game
-    // Parameter: dt, a time delta between ticks
-    update(dt) {
-        // You should multiply any movement by the dt parameter
-        // which will ensure the game runs at the same speed for
-        // all computers.
+    // check for collision
+    // https://stackoverflow.com/questions/13916966/adding-collision-detection-to-images-drawn-on-canvas
+    if(this.x < player.x + player.width &&
+     this.x + this.width > player.x &&
+     this.y < player.y + player.height &&
+     this.y + this.height > player.y) {
 
-        // if crossed the screen
-        if (this.x > 505) {
-            // reset its position after 1 second.
-            setTimeout(() => this.x = -120, 1000);
-
-        } else { // let it move
-            this.x += this.speed * dt;
-        }
-
-        // check for collision
-        // https://stackoverflow.com/questions/13916966/adding-collision-detection-to-images-drawn-on-canvas
-        if(this.x < player.x + player.width &&
-           this.x + this.width > player.x &&
-           this.y < player.y + player.height &&
-           this.y + this.height > player.y) {
-
-          player.resetPosition();
-          player.lostLife();
-          decreaseScore(300);
-
-        }
+      player.resetPosition();
+      player.lostLife();
+      decreaseScore(300);
 
     }
 
-    // Draw the enemy on the screen, required method for game
-    render() {
-        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-    }
+  }
+
+  // Draw the enemy on the screen, required method for game
+  render() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+  }
 }
-
 
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
 class Player extends Enemy {
-    constructor(width, height) {
-        super(width, height);
-        this.x = 200;
-        this.y = 400;
-        this.remainingLives = 3;
-        this.sprite = 'images/char-boy.png';
+  constructor(width, height) {
+      super(width, height);
+      this.x = 200;
+      this.y = 400;
+      this.remainingLives = 3;
+      this.sprite = 'images/char-boy.png';
 
+  }
+
+  update() {
+    // if player reaches the water.
+    if(this.y === -15) {
+      this.resetPosition(); // reset player's position.
+      increaseScore(500); // increase score.
+      level += 1; // level up.
+      renderNewGems(); // clear current rendered gems and render new ones.
+      displayHeart(); // if player passes 5 levels, one heart will be rendered on screen.
+      gameStatus(); // check if player won or lost.
+
+      // if player passes 4 levels, create one more enemy.
+      if(level % 4 === 0 && level !== 20) {
+        createEnemies(1);
+      }
     }
+  }
 
-    update() {
-        // if player reaches the water.
-        if(this.y === -15) {
-          this.resetPosition(); // reset player's position.
-          increaseScore(500); // increase score.
-          level += 1; // level up.
-          renderNewGems(); // clear current rendered gems and render new ones.
-          displayHeart(); // if player passes 5 levels, one heart will be rendered on screen.
-          gameStatus(); // check if player won or lost.
+  // this method is invoked when collision happens, it removes one heart.
+  lostLife() {
+    if(this.remainingLives > 1) {
+      hearts.pop(); // remove one heart(life)
+      this.remainingLives--; // decrease player's remaining lives
+      xPositionForHearts -= 30; // used to keep track of hearts x position.
 
-          // if player passes 4 levels, create one more enemy.
-          if(level % 4 === 0 && level !== 20) {
-            createEnemies(1);
+    } else {
+      hearts.pop();
+      this.remainingLives--;
+      xPositionForHearts -= 30; // used to keep track of hearts x position.
+      gameStatus(); // check whether player has won or lost.
+      resetGame(); // restart the game.
+    }
+  }
+
+  // to add one life to player.
+  addLife() {
+    if(this.remainingLives < 3) {
+
+      const heart = new Heart(xPositionForHearts, 0, 25, 42);
+      hearts.push(heart);
+      this.remainingLives++;
+      xPositionForHearts += 30;
+    }
+  }
+
+  // receives the pressed key and moves the player based on it.
+  handleInput(key) {
+
+    // player can move only when no popup is displayed.
+    if(!document.querySelector(".blur").classList.contains("blur-displayed")) {
+      // check which key is pressed
+      switch(key) {
+        case "left":
+          // to make sure that the player won't cross the screen.
+          if(this.x !== 0) {
+            this.x -= 100;
           }
-        }
-      }
+          break;
 
-    // this method is invoked when collision happens, it removes one heart.
-    lostLife() {
-      if(this.remainingLives > 1) {
-        hearts.pop(); // remove one heart(life)
-        this.remainingLives--; // decrease player's remaining lives
-        xPositionForHearts -= 30; // used to keep track of hearts x position.
+        case "up":
+          // to make sure that the player won't cross the screen.
+          if(this.y !== -15) {
+            this.y -= 83;
+          }
+          break;
 
-      } else {
-        hearts.pop();
-        this.remainingLives--;
-        xPositionForHearts -= 30; // used to keep track of hearts x position.
-        gameStatus(); // check whether player has won or lost.
-        resetGame(); // restart the game.
-      }
-    }
+        case "right":
+          // to make sure that the player won't cross the screen.
+          if(this.x !== 400) {
+            this.x += 100;
+          }
+          break;
 
-    // to add one life to player.
-    addLife() {
-      if(this.remainingLives < 3) {
+        case "down":
+          // to make sure that the player won't cross the screen.
+          if(this.y !== 400) {
+            this.y += 83;
+          }
 
-        const heart = new Heart(xPositionForHearts, 0, 25, 42);
-        hearts.push(heart);
-        this.remainingLives++;
-        xPositionForHearts += 30;
       }
     }
 
-    // receives the pressed key and moves the player based on it.
-    handleInput(key) {
+  }
 
-      // player can move only when no popup is displayed.
-      if(!document.querySelector(".blur").classList.contains("blur-displayed")) {
-        // check which key is pressed
-        switch(key) {
-          case "left":
-            // to make sure that the player won't cross the screen.
-            if(this.x !== 0) {
-              this.x -= 100;
-            }
-            break;
-
-          case "up":
-            // to make sure that the player won't cross the screen.
-            if(this.y !== -15) {
-              this.y -= 83;
-            }
-            break;
-
-          case "right":
-            // to make sure that the player won't cross the screen.
-            if(this.x !== 400) {
-              this.x += 100;
-            }
-            break;
-
-          case "down":
-            // to make sure that the player won't cross the screen.
-            if(this.y !== 400) {
-              this.y += 83;
-            }
-
-        }
-      }
-
-    }
-
-    // for reseting player's position
-    resetPosition() {
-        this.x = 200;
-        this.y = 400;
-    }
+  // for reseting player's position
+  resetPosition() {
+    this.x = 200;
+    this.y = 400;
+  }
 }
 
 class Heart {
   // Create Heart constructor with position coordinates parameters
   constructor(x, y, width, height) {
-      this.sprite = 'images/Heart.png';
-      this.x = x;
-      this.y = y;
-      //Resize image
-      this.width = width;
-      this.height = height;
+    this.sprite = 'images/Heart.png';
+    this.x = x;
+    this.y = y;
+    //Resize image
+    this.width = width;
+    this.height = height;
   }
 
   update() {
@@ -181,7 +180,7 @@ class Heart {
 
   // Draw the live object (hearts) on our canvas:
   render() {
-      ctx.drawImage(Resources.get(this.sprite), this.x, this.y, this.width, this.height);
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y, this.width, this.height);
   }
 }
 
@@ -253,25 +252,24 @@ function renderScore() {
    of instantiating it on the same block.
 */
 function yCoordinate() {
-    switch(yPosition) {
+  switch(yPosition) {
+    case 60:
+      yPosition = 144;
+      break;
 
-        case 60:
-          yPosition = 144;
-          break;
+    case 144:
+      yPosition = 227;
+      break;
 
-        case 144:
-          yPosition = 227;
-          break;
+    case 277:
+      yPosition = 60;
+      break;
 
-        case 277:
-          yPosition = 60;
-          break;
+    default:
+      yPosition = 60;
+  }
 
-        default:
-          yPosition = 60;
-    }
-
-    return yPosition;
+  return yPosition;
 }
 
 /*
@@ -281,18 +279,18 @@ function yCoordinate() {
    https://appdividend.com/2019/02/20/javascript-math-random-tutorial-math-random-example/
 */
 function speedGenerator() {
-   let min = Math.ceil(150);
-   let max = Math.floor(300);
-   return Math.floor(Math.random() * (max - min + 1)) + min;
+  let min = Math.ceil(150);
+  let max = Math.floor(300);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 /*
    for creating new enemies and pushing them into allEnemies array.
 */
 function createEnemies(num) {
-    for(let i = 0; i < num; i++) {
-        allEnemies.push(new Enemy(yCoordinate(), speedGenerator()));
-   }
+  for(let i = 0; i < num; i++) {
+    allEnemies.push(new Enemy(yCoordinate(), speedGenerator()));
+ }
 }
 
 // for creating gems.
@@ -396,32 +394,29 @@ function resetGame() {
   renderNewGems();
 }
 
-// represents player's score.
-let score = 0;
 
-// represents player's level.
-let level = 0;
+let score = 0, // represents player's score.
 
-// enemies array
-let allEnemies = [];
+level = 0, // represents player's level.
 
-// will be used to set the y coordinate of the newly created enemy.
-let yPosition = 0;
+allEnemies = [], // all enemies array
+
+yPosition = 0, // will be used to set the y coordinate of the newly created enemy.
+
+gems = [], // to store our rendered gems.
+
+hearts = [], // Create hearts array to put new hearts into it.
+
+xPositionForHearts = 410, // used to determine the next heart's x position.
+
+dHeart; // to store a heart that appears each time player passes 5 levels.
 
 // player
 const player = new Player();
 
-// instantiate 4 enemies
-createEnemies(4);
+// instantiate 3 enemies
+createEnemies(3);
 
-// to store our rendered gems.
-let gems = [];
-
-// Create hearts array to put new hearts into it.
-let hearts = [];
-
-// used to determine the next heart's x position.
-let xPositionForHearts = 410;
 
 // create 3 hearts depending on initial player remainingLives
 for (let i = 1; i <= player.remainingLives; i++) {
@@ -430,8 +425,11 @@ for (let i = 1; i <= player.remainingLives; i++) {
   xPositionForHearts += 30;
 }
 
-// allowed positions for rendering gems.
-const allowedPositionsForGems = [];
+
+const allowedPositionsForGems = [], // allowed positions for rendering gems.
+
+allowedPositionsForDHeart = []; // allowed positions to display hearts.
+
 // to fill our allowedPositionsForGems with allowed positions for rendering gems.
 for(let y = 94; y <= 260; y += 83) {
   for(let x = 12; x <= 416; x += 101) {
@@ -439,10 +437,7 @@ for(let y = 94; y <= 260; y += 83) {
   }
 }
 
-// to store a heart that appears each time player passes 5 levels.
-let dHeart;
-// allowed positions to display hearts.
-const allowedPositionsForDHeart = [];
+
 // to fill our allowedPositionsForDHearts with allowed positions for rendering hearts.
 for(let y = 107; y <= 273; y += 83) {
   for(let x = 11; x <= 415; x += 101) {
@@ -457,14 +452,14 @@ renderNewGems();
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {
-    var allowedKeys = {
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down'
-    };
+  var allowedKeys = {
+    37: 'left',
+    38: 'up',
+    39: 'right',
+    40: 'down'
+  };
 
-    player.handleInput(allowedKeys[e.keyCode]);
+  player.handleInput(allowedKeys[e.keyCode]);
 });
 
 // listens to clicks, specifically for clicking play-again buttons.
