@@ -59,7 +59,7 @@ class Player extends Enemy {
     constructor(width, height) {
         super(width, height);
         this.x = 200;
-        this.y = 373.5;
+        this.y = 400;
         this.remainingLives = 3;
         this.sprite = 'images/char-boy.png';
 
@@ -67,10 +67,11 @@ class Player extends Enemy {
 
     update() {
         // if player reaches the water, reset player's position and increase the score and the level.
-        if(this.y === -41.5) {
+        if(this.y === -15) {
           this.resetPosition();
           increaseScore(500);
           level += 1;
+          renderNewGems();
         }
       }
 
@@ -109,7 +110,7 @@ class Player extends Enemy {
 
             case "up":
               // to make sure that the player won't cross the screen.
-              if(this.y !== -41.5) {
+              if(this.y !== -15) {
                 this.y -= 83;
               }
               break;
@@ -123,7 +124,7 @@ class Player extends Enemy {
 
             case "down":
               // to make sure that the player won't cross the screen.
-              if(this.y !== 373.5) {
+              if(this.y !== 400) {
                 this.y += 83;
               }
 
@@ -133,7 +134,7 @@ class Player extends Enemy {
     // for reseting player's position
     resetPosition() {
         this.x = 200;
-        this.y = 373.5;
+        this.y = 400;
     }
 }
 
@@ -153,6 +154,46 @@ class Heart {
   }
 }
 
+class Gem {
+  constructor(sprite, x, y, width, height) {
+    this.sprite = sprite;
+    this.x = x;
+    this.y = y;
+    this.width = 75;
+    this.height = 120;
+  }
+
+  // Draw the live object (gems) on our canvas:
+  render() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y, this.width, this.height);
+  }
+
+  update() {
+    // check for collision
+    if(this.x < player.x + player.width &&
+       this.x + 60 > player.x &&
+       this.y < player.y + player.height &&
+       this.y + 30 > player.y) {
+
+       // increase the score based on which gem is it.
+       switch(this.sprite) {
+        case "images/orange-gem.png":
+          increaseScore(200);
+          break;
+
+        case "images/green-gem.png":
+          increaseScore(300);
+          break;
+
+        case "images/blue-gem.png":
+          increaseScore(400);
+       }
+
+       // remove the gem from gems array.
+       gems.splice(gems.indexOf(this), 1);
+    }
+  }
+}
 
 // used to increase the score.
 function increaseScore(points) {
@@ -223,6 +264,40 @@ function createEnemies(num) {
    }
 }
 
+// for creating gems.
+function renderNewGems() {
+  // first, remove current gems.
+  for(let n = 1; n <= 3; n++) {
+    gems.pop();
+  }
+
+  // add three gems, orange, green, and blue.
+  for(let i = 1; i <= 3; i++) {
+
+    // to store into it a random position form allowedPositionsForGems array.
+    // https://www.kirupa.com/html5/picking_random_item_from_array.htm
+    const positionForGem = allowedPositionsForGems[Math.floor(Math.random() * allowedPositionsForGems.length)];
+
+    /*
+      based on i's value, the new gem will be created and it'll be positioned
+      using a random x value and y value which are inside an array that's stored inside positionForGem
+      now.
+    */
+    switch(i) {
+      case 1:
+        gems.push(new Gem("images/orange-gem.png", positionForGem[0], positionForGem[1]));
+        break;
+
+      case 2:
+        gems.push(new Gem("images/green-gem.png", positionForGem[0], positionForGem[1]));
+        break;
+
+      case 3:
+        gems.push(new Gem("images/blue-gem.png", positionForGem[0], positionForGem[1]));
+    }
+  }
+}
+
 // represents player's score.
 let score = 0;
 
@@ -241,6 +316,9 @@ const player = new Player();
 // instantiate 4 enemies
 createEnemies(4);
 
+// to store our rendered gems.
+let gems = [];
+
 // Create hearts array to put new hearts into it.
 let hearts = [];
 
@@ -253,6 +331,19 @@ for (let i = 1; i <= player.remainingLives; i++) {
   hearts.push(heart);// Add it to hearts array
   xPositionForHearts += 30;
 }
+
+// allowed positions for rendering gems.
+const allowedPositionsForGems = [];
+// to fill our allowedPositionsForGems with allowed positions for rendering gems.
+for(let y = 94; y <= 260; y += 83) {
+  for(let x = 12; x <= 416; x += 101) {
+    allowedPositionsForGems.push([x, y]);
+  }
+}
+
+// render/create gems.
+renderNewGems();
+
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
