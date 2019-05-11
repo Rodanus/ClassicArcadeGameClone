@@ -1,3 +1,119 @@
+html {
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     text-align: center;
+    font-family: 'Coda', cursive;
+    background: #1f1f1f; /*#f7ffff;*/
+}
+
+canvas {
+	margin-top: 35px;
+}
+
+/*
+ * blur
+ */
+.blur {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	background: rgba(0, 0, 0, 0.5);
+	display: none;
+}
+
+.blur-displayed  {
+	display: block;
+}
+
+/*
+ * congrats-popup and game-over-popup
+ */
+.congrats-popup,
+.game-over-popup {
+	background: #f7ffff;
+    width: 505px;
+    height: 280px;
+    color: black;
+    position: absolute;
+    top: 41%;
+    left: -100%;
+    transform: translate(-50%, -50%);
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 15px;
+
+}
+
+/*
+ * congrats-title and game-over-title
+ */
+.congrats-title,
+.game-over-title {
+    text-transform: capitalize;
+    font-size: 2rem;
+    color: #17a91d;
+}
+
+.game-over-title {
+	color: #d72638;
+	/* TODO: remove some of the top space */
+}
+
+/*
+ * score and advice
+ */
+.score,
+.advice {
+	font-size: 1.5rem;
+}
+
+/*
+ * play-again buttons
+ */
+.play-again {
+	font-family: inherit;
+    font-size: 1.1rem;
+    padding: 0.6rem;
+    background: #4caf50;
+    outline: none;
+    border: none;
+    border-radius: 10px;
+    color: #f7ffff;
+    margin-top: 26.56px;
+    cursor: pointer;
+}
+
+.play-again:hover {
+	background: #469c4a;
+}
+
+.play-again:focus {
+	outline: 2px solid skyblue;
+}
+
+/*
+ * to display the popups
+ */
+.visible {
+    left: 50%;
 }

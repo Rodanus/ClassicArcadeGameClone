@@ -66,13 +66,14 @@ class Player extends Enemy {
     }
 
     update() {
-        // if player reaches the water, reset player's position and increase the score and the level.
+        // if player reaches the water.
         if(this.y === -15) {
-          this.resetPosition();
-          increaseScore(500);
-          level += 1;
-          renderNewGems();
-          displayHeart();
+          this.resetPosition(); // reset player's position.
+          increaseScore(500); // increase score.
+          level += 1; // level up.
+          renderNewGems(); // clear current rendered gems and render new ones.
+          displayHeart(); // if player passes 5 levels, one heart will be rendered on screen.
+          gameStatus(); // check if player won or lost.
 
           // if player passes 4 levels, create one more enemy.
           if(level % 4 === 0 && level !== 20) {
@@ -84,18 +85,23 @@ class Player extends Enemy {
     // this method is invoked when collision happens, it removes one heart.
     lostLife() {
       if(this.remainingLives > 1) {
+        hearts.pop(); // remove one heart(life)
+        this.remainingLives--; // decrease player's remaining lives
+        xPositionForHearts -= 30; // used to keep track of hearts x position.
+
+      } else {
         hearts.pop();
         this.remainingLives--;
-        xPositionForHearts -= 30;
-      } else {
-        alert('Game over');
-        resetGame();
+        xPositionForHearts -= 30; // used to keep track of hearts x position.
+        gameStatus(); // check whether player has won or lost.
+        resetGame(); // restart the game.
       }
     }
 
     // to add one life to player.
     addLife() {
       if(this.remainingLives < 3) {
+
         const heart = new Heart(xPositionForHearts, 0, 25, 42);
         hearts.push(heart);
         this.remainingLives++;
@@ -105,37 +111,41 @@ class Player extends Enemy {
 
     // receives the pressed key and moves the player based on it.
     handleInput(key) {
+
+      // player can move only when no popup is displayed.
+      if(!document.querySelector(".blur").classList.contains("blur-displayed")) {
         // check which key is pressed
         switch(key) {
+          case "left":
+            // to make sure that the player won't cross the screen.
+            if(this.x !== 0) {
+              this.x -= 100;
+            }
+            break;
 
-            case "left":
-              // to make sure that the player won't cross the screen.
-              if(this.x !== 0) {
-                this.x -= 100;
-              }
-              break;
+          case "up":
+            // to make sure that the player won't cross the screen.
+            if(this.y !== -15) {
+              this.y -= 83;
+            }
+            break;
 
-            case "up":
-              // to make sure that the player won't cross the screen.
-              if(this.y !== -15) {
-                this.y -= 83;
-              }
-              break;
+          case "right":
+            // to make sure that the player won't cross the screen.
+            if(this.x !== 400) {
+              this.x += 100;
+            }
+            break;
 
-            case "right":
-              // to make sure that the player won't cross the screen.
-              if(this.x !== 400) {
-                this.x += 100;
-              }
-              break;
-
-            case "down":
-              // to make sure that the player won't cross the screen.
-              if(this.y !== 400) {
-                this.y += 83;
-              }
+          case "down":
+            // to make sure that the player won't cross the screen.
+            if(this.y !== 400) {
+              this.y += 83;
+            }
 
         }
+      }
+
     }
 
     // for reseting player's position
@@ -232,9 +242,9 @@ function decreaseScore(points) {
 // will be used to draw/update the score.
 function renderScore() {
   ctx.font = '24px arial';
-  ctx.color = "#333";
+  ctx.fillStyle = "#fff";
   ctx.fillText(`Score: ${score}`, 205, 31);
-  ctx.fillText(`level ${level}`, 15, 31);
+  ctx.fillText(`Level ${level}`, 15, 31);
 }
 
 /*
@@ -336,6 +346,35 @@ function displayHeart() {
   }
 }
 
+// to check if player won or lost and based on that a popup appears.
+function gameStatus() {
+  // if player reaches last level.
+  if(level === 20) {
+
+    const blur = document.querySelector(".blur"),
+    congratsPopup = document.querySelector(".congrats-popup"),
+    playerScore = document.querySelector(".player-score"),
+    playerRemainingLives = document.querySelector(".remaining-lives");
+
+    playerScore.innerHTML = score;
+    playerRemainingLives.innerHTML = player.remainingLives;
+
+    // display following elements.
+    blur.classList.toggle("blur-displayed");
+    congratsPopup.classList.toggle("visible");
+
+  } else if(player.remainingLives === 0) { // if player lost.
+    const blur = document.querySelector(".blur"),
+    gameOverPopup = document.querySelector(".game-over-popup");
+
+    // display following elements.
+    blur.classList.toggle("blur-displayed");
+    gameOverPopup.classList.toggle("visible");
+
+  }
+}
+
+
 // will be used to reset everything
 function resetGame() {
 
@@ -343,7 +382,7 @@ function resetGame() {
   score = 0;
 
   // add lives
-  for(let i = 0; i < 2; i++) {
+  for(let i = 0; i < 3; i++) {
     player.addLife();
   }
 
@@ -426,4 +465,22 @@ document.addEventListener('keyup', function(e) {
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
+});
+
+// listens to clicks, specifically for clicking play-again buttons.
+document.addEventListener('click', (e) => {
+  const blur = document.querySelector(".blur");
+
+  if(e.target.classList.contains("play-again") && e.target.parentElement.classList.contains("congrats-popup")) {
+
+    resetGame(); // reset the game
+
+    e.target.parentElement.classList.toggle("visible"); // removes the popup, which is button's parent.
+    blur.classList.toggle("blur-displayed");
+
+  } else if(e.target.classList.contains("play-again") && e.target.parentElement.classList.contains("game-over-popup")) {
+
+    e.target.parentElement.classList.toggle("visible");
+    blur.classList.toggle("blur-displayed");
+  }
 });
