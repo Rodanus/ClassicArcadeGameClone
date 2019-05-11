@@ -72,6 +72,11 @@ class Player extends Enemy {
           increaseScore(500);
           level += 1;
           renderNewGems();
+
+          // if player passes 4 levels, create one more enemy.
+          if(level % 4 === 0 && level !== 20) {
+            createEnemies(1);
+          }
         }
       }
 
