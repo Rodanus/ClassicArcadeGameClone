@@ -82,12 +82,13 @@ class Player extends Enemy {
 
     // this method is invoked when collision happens, it removes one heart.
     lostLife() {
-      if(this.remainingLives > 0) {
+      if(this.remainingLives > 1) {
         hearts.pop();
         this.remainingLives--;
         xPositionForHearts -= 30;
       } else {
-        alert('Game over')
+        alert('Game over');
+        resetGame();
       }
     }
 
@@ -301,6 +302,28 @@ function renderNewGems() {
         gems.push(new Gem("images/blue-gem.png", positionForGem[0], positionForGem[1]));
     }
   }
+}
+
+
+// will be used to reset everything
+function resetGame() {
+
+  level = 0;
+  score = 0;
+
+  // add lives
+  for(let i = 0; i < 2; i++) {
+    player.addLife();
+  }
+
+  // if enemies are more than 3, delete them and keep only 3.
+  if(allEnemies.length > 3) {
+    for(let n = allEnemies.length; n > 3; n--) {
+      allEnemies.pop();
+    }
+  }
+
+  renderNewGems();
 }
 
 // represents player's score.
