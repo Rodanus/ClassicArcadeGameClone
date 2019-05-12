@@ -1,20 +1,38 @@
 # Classic Arcade Game Clone Project
 
-## Table of Contents
+## Project Overview
 
-- [Instructions](#instructions)
-- [Contributing](#contributing)
+Udacity provides us visual assets and a game loop engine; using these tools we must add a number of entities to the game including the player characters and enemies to recreate the classic arcade game Frogger.
 
-## Instructions
+## How To Run The Game
 
-Use this [rubric](https://review.udacity.com/#!/rubrics/15/view) for self-checking your submission.
+- You can clone the repository if want and open the index.html file which will display the game in your default browser
+- or simply [open the game using this link](https://rodanus.github.io/ClassicArcadeGameClone/).
 
-Make sure the functions you write are **object-oriented** - either class functions (like `Player` and `Enemy`) or class prototype functions such as `Enemy.prototype.checkCollisions`. Also make sure that the keyword `this` is used appropriately within your class and class prototype functions to refer to the object the function is called upon.
 
-Your **README.md** file should be updated with instructions on both how to 1. Run and 2. Play your arcade game.
+## How To Play
 
-For detailed instructions on how to get started, check out this [guide](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true).
+You can move your player using the arrows, left, up, right, and down on your keyboard.
+You should reach the water in order to pass to the next level.
+When you start, you have only 3 lives, don't worry if you lost one ;), one heart(life) will appear every 5 levels and will disappear in 4 seconds.
+Once you reach the water, your score will increase 500 points, you can also collect gems to increase your score more, there are three gems in the game, the yellow gem, will increase your score 200 points, the green gem, will increase your score 300 points, the blue gem, will increase your score 400 points.
 
-## Contributing
+**In order to win, you must reach level 20**
 
-This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
+that's it!
+**Good Luck!**
+
+## Languages Used
+
+- HTML
+- CSS
+- JavaScript
+
+## Helpful Links
+
+- [Adding collision detection to images drawn on canvas](https://stackoverflow.com/questions/13916966/adding-collision-detection-to-images-drawn-on-canvas)
+- [Javascript Math Random Tutorial | Math.Random() Example](https://appdividend.com/2019/02/20/javascript-math-random-tutorial-math-random-example/)
+- [Generate random number between two numbers in JavaScript](https://stackoverflow.com/questions/4959975/generate-random-number-between-two-numbers-in-javascript)
+- [Picking a Random Item from an Array](https://www.kirupa.com/html5/picking_random_item_from_array.htm)
+- [9 Ways to Remove Elements From A JavaScript Array - Plus How to Safely Clear JavaScript Arrays](https://love2dev.com/blog/javascript-remove-from-array/)
+- [Changing color for fillText() on HTML5 <canvas>](https://stackoverflow.com/questions/15750013/changing-color-for-filltext-on-html5-canvas)
