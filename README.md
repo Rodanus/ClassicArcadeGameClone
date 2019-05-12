@@ -12,10 +12,10 @@ Udacity provides us visual assets and a game loop engine; using these tools we m
 
 ## How To Play
 
-You can move your player using the arrows, left, up, right, and down on your keyboard.
-You should reach the water in order to pass to the next level.
-When you start, you have only 3 lives, don't worry if you lost one ;), one heart(life) will appear every 5 levels and will disappear in 4 seconds.
-Once you reach the water, your score will increase 500 points, you can also collect gems to increase your score more, there are three gems in the game, the yellow gem, will increase your score 200 points, the green gem, will increase your score 300 points, the blue gem, will increase your score 400 points.
+- You can move your player using the arrows, left, up, right, and down on your keyboard.
+- You should reach the water in order to pass to the next level.
+- When you start, you have only 3 lives, don't worry if you lost one ;), one heart(life) will appear every 5 levels and will disappear in 4 seconds.
+- Once you reach the water, your score will increase 500 points, you can also collect gems to increase your score more, there are three gems in the game, the yellow gem, will increase your score 200 points, the green gem, will increase your score 300 points, the blue gem, will increase your score 400 points.
 
 **In order to win, you must reach level 20**
 
